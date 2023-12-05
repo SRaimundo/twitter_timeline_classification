@@ -15,7 +15,7 @@ Neste projeto, foi desenvolvido um modelo de classificação para identificar se
 
 ---
 
-# Executando o pre processamento
+# Executando o Pré-Processamento
 Para executar o script `preProcessing.py`, siga as instruções abaixo.
 
 ## Pré-requisitos
@@ -46,7 +46,7 @@ Certifique-se de ter Python instalado em seu ambiente. Se ainda não tiver, voc�
 
 3. Aguarde a conclusão da execução do script.
 
-Isso é tudo! Agora você deve ter seus embeddings gerados e salvos nos caminhos especificados.
+Pronto! Agora você deve ter seus dados pré-processados e salvos nos caminhos especificados.
 
 ---
 
