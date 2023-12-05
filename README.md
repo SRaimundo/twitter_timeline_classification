@@ -1,6 +1,6 @@
 # BertEmbeddings - Neural Network for timelines classification
 
-Neste projeto, foi desenvolvido um modelo de classificação para identificar se as timelines dos usuários são consideradas tóxicas ou não, no contexto das eleições de 2022. A classificação manual demanda tempo e a expertise, o que motivou a criação de um sistema automático fundamentado em redes neurais.
+Neste projeto, foi desenvolvido um modelo de classificação para identificar se as timelines dos usuários são consideradas tóxicas ou não, no contexto das eleições de 2022. A classificação manual demanda tempo e expertise, o que motivou a criação de um sistema automático fundamentado em redes neurais.
 
 
 
