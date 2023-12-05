@@ -103,9 +103,11 @@ def main():
     output_size = 2
     dropout_rate = 0.3
     num_epochs = 14
+    
 
     modelBF = BertFC(embedding_dim,output_size,dropout_rate)
     train_losses, test_losses = optimize(modelBF,train_loader,test_loader,num_epochs=num_epochs,device=device,outpath=save_weights)
+
 
     # Plot the learning curve
     plt.figure(figsize=(8, 5))

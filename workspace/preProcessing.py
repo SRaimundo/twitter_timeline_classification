@@ -80,8 +80,8 @@ if __name__ == "__main__":
 
   input_file_less = args.LESS_FILE
   input_file_more = args.MORE_FILE
-  output_file_less = args.LESS_FILE
-  output_file_more = args.LESS_OUTPUT
+  output_file_less = args.LESS_OUTPUT
+  output_file_more = args.MORE_OUTPUT
 
   less_df = pd.read_csv(input_file_less, delimiter=';', skiprows=0, low_memory=False)
   more_df = pd.read_csv(input_file_more, delimiter=';', skiprows=0, low_memory=False)

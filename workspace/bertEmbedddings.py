@@ -22,6 +22,7 @@ class BertEmbeddings():
             zeros = [torch.zeros(dim) for i in range(padding_size)]
             zeros = torch.stack(zeros)
             new_embeddings.append(torch.cat([embedding,zeros],dim=0))
+        return new_embeddings
 
     
     def generateEmbeddings(self,sample,padding=False): #semple is a dictinary(key: author_id, value: list of tweets)
@@ -57,15 +58,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Geração de embeddings usando BERT")
     parser.add_argument("--LESS_FILE", type=str, help="Caminho para o arquivo less.csv")
     parser.add_argument("--MORE_FILE", type=str, help="Caminho para o arquivo more.csv")
+    parser.add_argument("--LESS_EMBEDDINGS_FILE", type=str, help="Caminho para salvar o arquivo less_embeddings.pt")
+    parser.add_argument("--MORE_EMBEDDINGS__FILE", type=str, help="Caminho para salvar o arquivo more_embeddings.pt")
 
     args = parser.parse_args()
 
-    if not all([args.LESS_FILE, args.MORE_FILE]):
+    if not all([args.LESS_FILE, args.MORE_FILE, args.LESS_EMBEDDINGS_FILE, args.MORE_EMBEDDINGS__FILE]):
         print("Usage: python3 bertEmbeddings.py --LESS_FILE <caminho_less.csv> --MORE_FILE <caminho_more.csv> ")
         sys.exit(1)
 
     less_df_file = args.LESS_FILE
     more_df_file = args.MORE_FILE
+    less_pt = args.LESS_EMBEDDINGS_FILE
+    more_pt = args.MORE_EMBEDDINGS__FILE
 
     #@title Função para criar dict
     def criar_dict(df):
@@ -118,8 +123,8 @@ if __name__ == "__main__":
     more_embeddings = model.generateEmbeddings(more_dict,True)
 
     #@title Salvar objetos
-    torch.save(torch.stack(less_embeddings))
-    torch.save(torch.stack(more_embeddings))
+    torch.save(torch.stack(less_embeddings),less_pt)
+    torch.save(torch.stack(more_embeddings),more_pt)
 
 
 

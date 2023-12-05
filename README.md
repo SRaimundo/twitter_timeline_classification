@@ -39,7 +39,7 @@ Certifique-se de ter Python instalado em seu ambiente. Se ainda não tiver, voc�
     Exemplo:
 
     ```bash
-    python preProcessing.py --LESS_FILE caminho/do/seu/less.csv --MORE_FILE caminho/do/seu/more.csv --LESS_OUTPUT caminho/de/saida/less_embeddings.pt --MORE_OUTPUT caminho/de/saida/more_embeddings.pt
+    python3 preProcessing.py --LESS_FILE caminho/do/seu/less.csv --MORE_FILE caminho/do/seu/more.csv --LESS_OUTPUT caminho/de/saida/less_embeddings.pt --MORE_OUTPUT caminho/de/saida/more_embeddings.pt
     ```
 
     Substitua os caminhos pelos reais do seu conjunto de dados e destino para os embeddings gerados.
@@ -60,11 +60,13 @@ Agora que os dados estão preparados usando o script `preProcessing.py`, siga as
 
     - `--LESS_FILE`: Caminho do arquivo less.csv.
     - `--MORE_FILE`: Caminho do arquivo more.csv.
+    - `--LESS_EMBEDDINGS_FILE`: Caminho para salvar o arquivo less_embeddings.pt.
+    - `--MORE_EMBEDDINGS__FILE`: Caminho para salvar o arquivo more_embeddings.pt.
 
     Exemplo:
 
     ```bash
-    python bertEmbedddings.py --LESS_FILE caminho/do/seu/less.csv --MORE_FILE caminho/do/seu/more.csv 
+    python3 bertEmbedddings.py --LESS_FILE caminho/do/seu/less.csv --MORE_FILE caminho/do/seu/more.csv --LESS_EMBEDDINGS_FILE caminho/do/seu/less.pt --MORE_EMBEDDINGS__FILE caminho/do/seu/more.pt
     ```
 
     Substitua os caminhos pelos reais do seu conjunto de dados.
@@ -88,7 +90,7 @@ Agora que os embeddings estão preparados usando o script `bert_embeddings.py`, 
     Exemplo:
 
     ```bash
-    python train.py --LESS_FILE caminho/do/seu/less.csv --MORE_FILE caminho/do/seu/more.csv --WEIGHS_MODEL caminho/do/seu/weights.pth 
+    python3 train.py --LESS_FILE caminho/do/seu/less.pt --MORE_FILE caminho/do/seu/more.pt --WEIGHS_MODEL caminho/do/seu/weights.pth 
     ```
 
     Substitua os caminhos pelos reais do seu conjunto de dados.
