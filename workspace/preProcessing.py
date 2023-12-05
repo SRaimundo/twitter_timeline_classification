@@ -1,6 +1,7 @@
 import pandas as pd
 import torch
 import sys
+import argparse
 
 # Text cleaning
 import re
@@ -63,15 +64,24 @@ def remove_stopwords(text):
 
 
 if __name__ == "__main__":
-  
-  if len(sys.argv) != 5:
-    print("Usage: python3 arquivo.py input_file_less input_file_more output_file_less output_file_more")
-    sys.exit(1)
 
-  input_file_less = sys.argv[1]
-  input_file_more = sys.argv[2]
-  output_file_less = sys.argv[3]
-  output_file_more = sys.argv[4]
+  parser = argparse.ArgumentParser(description="Processamento de dados")
+  parser.add_argument("--LESS_FILE", type=str, help="Caminho para o arquivo less.csv")
+  parser.add_argument("--MORE_FILE", type=str, help="Caminho para o arquivo more.csv")
+  parser.add_argument("--LESS_OUTPUT", type=str, help="Caminho de saída para less_embeddings.pt")
+  parser.add_argument("--MORE_OUTPUT", type=str, help="Caminho de saída para more_embeddings.pt")
+
+  args = parser.parse_args()
+
+  if not all([args.LESS_FILE, args.MORE_FILE, args.LESS_OUTPUT, args.MORE_OUTPUT]):
+      print("Usage: python3 arquivo.py --LESS_FILE <caminho_less.csv> --MORE_FILE <caminho_more.csv> --LESS_OUTPUT <caminho_saida_less_embeddings.pt> --MORE_OUTPUT <caminho_saida_more_embeddings.pt>")
+      sys.exit(1)
+
+
+  input_file_less = args.LESS_FILE
+  input_file_more = args.MORE_FILE
+  output_file_less = args.LESS_FILE
+  output_file_more = args.LESS_OUTPUT
 
   less_df = pd.read_csv(input_file_less, delimiter=';', skiprows=0, low_memory=False)
   more_df = pd.read_csv(input_file_more, delimiter=';', skiprows=0, low_memory=False)

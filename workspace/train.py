@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from dataset import ClassificationDataset
 from model import BertFC
 from evaluate import evaluate_model_accuracy, calc_test_loss
+import argparse
 import sys
 
 def optimize(model,train_loader,test_loader,learnig_rate=0.001,num_epochs=10,device="cpu",outpath='tweetClassification.pth'):
@@ -44,21 +45,29 @@ def optimize(model,train_loader,test_loader,learnig_rate=0.001,num_epochs=10,dev
 
 def main():
 
-    if len(sys.argv) != 4:
-        print("Usage: python3 arquivo.py less_embeddings_file.pt more_embeddings_file.pt weights.pth")
+    parser = argparse.ArgumentParser(description="Treinamento do modelo")
+    parser.add_argument("--LESS_FILE", type=str, help="Caminho para o arquivo less.csv")
+    parser.add_argument("--MORE_FILE", type=str, help="Caminho para o arquivo more.csv")
+    parser.add_argument("--WEIGHS_MODEL", type=str, help="Caminho para salvar os pesos do modelo")
+
+    args = parser.parse_args()
+
+    if not all([args.LESS_FILE, args.MORE_FILE, args.WEIGHS_MODEL]):
+        print("Usage: python3 arquivo.py --LESS_FILE <caminho_less.csv> --MORE_FILE <caminho_more.csv> --WEIGHS_MODEL <caminho_pesos_modelo.pth>")
         sys.exit(1)
-    
-    less_embeddings_file = sys.argv[1]
-    more_embeddings_file = sys.argv[2]
-    salve_weights = sys.argv[3]
+
+    less_embeddings_file = args.LESS_FILE
+    more_embeddings_file = args.MORE_FILE
+    save_weights = args.WEIGHS_MODEL
+  
  
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    less_embeddings = torch.load(less_embeddings_file = sys.argv[2],map_location=torch.device('cpu'))
+    less_embeddings = torch.load(less_embeddings_file ,map_location=torch.device('cpu'))
     less_embeddings = torch.mean(less_embeddings, dim=1)
 
-    more_embeddings = torch.load(more_embeddings_file = sys.argv[2],map_location=torch.device('cpu'))
+    more_embeddings = torch.load(more_embeddings_file,map_location=torch.device('cpu'))
     more_embeddings = torch.mean(more_embeddings, dim=1)
 
     torch.manual_seed(4)
@@ -96,7 +105,7 @@ def main():
     num_epochs = 14
 
     modelBF = BertFC(embedding_dim,output_size,dropout_rate)
-    train_losses, test_losses = optimize(modelBF,train_loader,test_loader,num_epochs=num_epochs,device=device,outpath=salve_weights)
+    train_losses, test_losses = optimize(modelBF,train_loader,test_loader,num_epochs=num_epochs,device=device,outpath=save_weights)
 
     # Plot the learning curve
     plt.figure(figsize=(8, 5))

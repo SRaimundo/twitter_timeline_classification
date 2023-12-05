@@ -3,6 +3,7 @@ from transformers import AutoModelForPreTraining  # Or BertForPreTraining for lo
 import torch
 import pandas as pd
 import sys
+import argparse 
 
 class BertEmbeddings():
     def __init__(self,bertModel,tokenizerModel,device):
@@ -53,14 +54,18 @@ class BertEmbeddings():
 
 if __name__ == "__main__":
 
-    if len(sys.argv) != 3:
-        print("Usage: python3 arquivo.py less_df_file more_df_file ")
+    parser = argparse.ArgumentParser(description="Geração de embeddings usando BERT")
+    parser.add_argument("--LESS_FILE", type=str, help="Caminho para o arquivo less.csv")
+    parser.add_argument("--MORE_FILE", type=str, help="Caminho para o arquivo more.csv")
+
+    args = parser.parse_args()
+
+    if not all([args.LESS_FILE, args.MORE_FILE]):
+        print("Usage: python3 bertEmbeddings.py --LESS_FILE <caminho_less.csv> --MORE_FILE <caminho_more.csv> ")
         sys.exit(1)
 
-    less_df_file = sys.argv[1]
-    more_df_file = sys.argv[2]
-    less_embeddings_file = sys.argv[3]
-    more_embeddings_file = sys.argv[4]
+    less_df_file = args.LESS_FILE
+    more_df_file = args.MORE_FILE
 
     #@title Função para criar dict
     def criar_dict(df):
