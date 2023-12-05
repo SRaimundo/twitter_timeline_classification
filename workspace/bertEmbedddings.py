@@ -2,6 +2,7 @@ from transformers import AutoTokenizer  # Or BertTokenizer
 from transformers import AutoModelForPreTraining  # Or BertForPreTraining for loading pretraining heads
 import torch
 import pandas as pd
+import sys
 
 class BertEmbeddings():
     def __init__(self,bertModel,tokenizerModel,device):
@@ -52,6 +53,15 @@ class BertEmbeddings():
 
 if __name__ == "__main__":
 
+    if len(sys.argv) != 3:
+        print("Usage: python3 arquivo.py less_df_file more_df_file ")
+        sys.exit(1)
+
+    less_df_file = sys.argv[1]
+    more_df_file = sys.argv[2]
+    less_embeddings_file = sys.argv[3]
+    more_embeddings_file = sys.argv[4]
+
     #@title Função para criar dict
     def criar_dict(df):
         # Ordenando o DataFrame por 'author_id' e 'data'
@@ -92,8 +102,8 @@ if __name__ == "__main__":
 
     model = BertEmbeddings(bertModel,tokenizerModel,device)
 
-    less_df = pd.read_csv('less_df.csv', delimiter=';', low_memory=False)
-    more_df = pd.read_csv('more_df.csv', delimiter=';', skiprows=0, low_memory=False)
+    less_df = pd.read_csv(less_df_file, delimiter=';', low_memory=False)
+    more_df = pd.read_csv(more_df_file, delimiter=';', skiprows=0, low_memory=False)
 
     #@title Gerar dicionário
     more_dict = remover_duplicados(criar_dict(more_df))

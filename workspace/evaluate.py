@@ -5,7 +5,7 @@ import seaborn as sns
 
 def evaluate_model_accuracy(model, dataloader,device="cpu"):
 
-  with torch.no_grad():
+  with torch.no_grad(): 
     all_predictions = []
     all_labels = []
     correct_predictions = 0

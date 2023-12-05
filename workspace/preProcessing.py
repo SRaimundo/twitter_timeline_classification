@@ -1,5 +1,6 @@
 import pandas as pd
 import torch
+import sys
 
 # Text cleaning
 import re
@@ -61,23 +62,34 @@ def remove_stopwords(text):
 
 
 
-less_df = pd.read_csv('less.csv', delimiter=';', skiprows=0, low_memory=False)
-more_df = pd.read_csv('more.csv', delimiter=';', skiprows=0, low_memory=False)
+if __name__ == "__main__":
+  
+  if len(sys.argv) != 5:
+    print("Usage: python3 arquivo.py input_file_less input_file_more output_file_less output_file_more")
+    sys.exit(1)
 
-#Aplicando limpeza
-less_df['tweet'] = [data_cleaning(tweet) for tweet in less_df['tweet']]
-less_df = clean_empty(less_df)
+  input_file_less = sys.argv[1]
+  input_file_more = sys.argv[2]
+  output_file_less = sys.argv[3]
+  output_file_more = sys.argv[4]
 
-more_df['tweet'] = [data_cleaning(tweet) for tweet in more_df['tweet']]
-more_df = clean_empty(more_df)
+  less_df = pd.read_csv(input_file_less, delimiter=';', skiprows=0, low_memory=False)
+  more_df = pd.read_csv(input_file_more, delimiter=';', skiprows=0, low_memory=False)
 
-#@title Aplicando remoção de stop-words nos dados
-more_df['tweet'].apply(remove_stopwords)
-less_df['tweet'].apply(remove_stopwords)
+  #Aplicando limpeza
+  less_df['tweet'] = [data_cleaning(tweet) for tweet in less_df['tweet']]
+  less_df = clean_empty(less_df)
 
-#@title Removendo tweets vazios após a remoção de stop-words
-more_df = clean_empty(more_df)
-less_df = clean_empty(less_df)
+  more_df['tweet'] = [data_cleaning(tweet) for tweet in more_df['tweet']]
+  more_df = clean_empty(more_df)
 
-less_df.to_csv('less_df.csv', sep=';')
-more_df.to_csv('more_df.csv', sep=';')
+  #@title Aplicando remoção de stop-words nos dados
+  more_df['tweet'].apply(remove_stopwords)
+  less_df['tweet'].apply(remove_stopwords)
+
+  #@title Removendo tweets vazios após a remoção de stop-words
+  more_df = clean_empty(more_df)
+  less_df = clean_empty(less_df)
+
+  less_df.to_csv(output_file_less, sep=';')
+  more_df.to_csv(output_file_more, sep=';')

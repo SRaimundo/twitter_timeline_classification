@@ -6,46 +6,59 @@ import matplotlib.pyplot as plt
 from dataset import ClassificationDataset
 from model import BertFC
 from evaluate import evaluate_model_accuracy, calc_test_loss
+import sys
 
-def optimize(model,train_loader,test_loader,learnig_rate=0.001,num_epochs=10,device="cpu"):
-  train_losses = []
-  test_losses = []
+def optimize(model,train_loader,test_loader,learnig_rate=0.001,num_epochs=10,device="cpu",outpath='tweetClassification.pth'):
+    train_losses = []
+    test_losses = []
 
-  loss_function = torch.nn.CrossEntropyLoss()
-  optimizer = torch.optim.Adam(model.parameters(),lr=learnig_rate)
+    loss_function = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(),lr=learnig_rate)
 
-  model.to(device)
+    model.to(device)
 
-  model.train()
-  for epoch in range(num_epochs):
-    total_loss = 0.0
+    model.train()
+    for epoch in range(num_epochs):
+        total_loss = 0.0
 
-    for embeddings,labels in train_loader :
-      embeddings, labels = embeddings.to(device), labels.to(device)
-      optimizer.zero_grad()
-      outputs = model.forward(embeddings)
-      loss = loss_function(outputs, labels)
+        for embeddings,labels in train_loader :
+            embeddings, labels = embeddings.to(device), labels.to(device)
+            optimizer.zero_grad()
+            outputs = model.forward(embeddings)
+            loss = loss_function(outputs, labels)
 
-      loss.backward()
-      optimizer.step()
+            loss.backward()
+            optimizer.step()
 
-      total_loss += loss.item()
+            total_loss += loss.item()
 
-    train_losses.append(total_loss/len(train_loader))
-    average_loss_test = calc_test_loss(model=model,dataloader=test_loader,loss_function=loss_function,device=device)
-    test_losses.append(average_loss_test)
-    print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {total_loss / len(train_loader)}         Test Loss: {average_loss_test}")
-  return train_losses, test_losses
+        train_losses.append(total_loss/len(train_loader))
+        average_loss_test = calc_test_loss(model=model,dataloader=test_loader,loss_function=loss_function,device=device)
+        test_losses.append(average_loss_test)
+        print(f"Epoch {epoch+1}/{num_epochs}, Train Loss: {total_loss / len(train_loader)}         Test Loss: {average_loss_test}")
+
+    torch.save(model.state_dict(), outpath)
+    return train_losses, test_losses
 
 
 
 def main():
+
+    if len(sys.argv) != 4:
+        print("Usage: python3 arquivo.py less_embeddings_file.pt more_embeddings_file.pt weights.pth")
+        sys.exit(1)
+    
+    less_embeddings_file = sys.argv[1]
+    more_embeddings_file = sys.argv[2]
+    salve_weights = sys.argv[3]
+ 
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    less_embeddings = torch.load('less.32.pt',map_location=torch.device('cpu'))
+    less_embeddings = torch.load(less_embeddings_file = sys.argv[2],map_location=torch.device('cpu'))
     less_embeddings = torch.mean(less_embeddings, dim=1)
 
-    more_embeddings = torch.load('more.32.pt',map_location=torch.device('cpu'))
+    more_embeddings = torch.load(more_embeddings_file = sys.argv[2],map_location=torch.device('cpu'))
     more_embeddings = torch.mean(more_embeddings, dim=1)
 
     torch.manual_seed(4)
@@ -83,7 +96,7 @@ def main():
     num_epochs = 14
 
     modelBF = BertFC(embedding_dim,output_size,dropout_rate)
-    train_losses, test_losses = optimize(modelBF,train_loader,test_loader,num_epochs=num_epochs,device=device)
+    train_losses, test_losses = optimize(modelBF,train_loader,test_loader,num_epochs=num_epochs,device=device,outpath=salve_weights)
 
     # Plot the learning curve
     plt.figure(figsize=(8, 5))
